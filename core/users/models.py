@@ -8,9 +8,10 @@ from uuid import uuid4
 
  
 class UserManager(BaseUserManager):   
-    def create_user(self, email, username, password=None):
+    def create_user(self, email, username, password=None, **kwargs):
         """
         Creates and saves a User with the given email and password.
+        **kwargs: fields inherited from Users's parent class PermissionsMixin.
         """
         if not email:
             raise ValueError('Users must have an email address')
@@ -20,6 +21,8 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
+            username=username,
+            **kwargs
         )
 
         # user.is_active = True
@@ -70,6 +73,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # used as a login
     USERNAME_FIELD = 'email'
+    EMAIL_FIELD = 'email'
+
     # required for the creation of superuser
     REQUIRED_FIELDS = ['username']
 
