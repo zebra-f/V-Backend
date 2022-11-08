@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+
+    'core.users',
 ]
 
 MIDDLEWARE = [
@@ -124,6 +126,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# Django settings
+
+AUTH_USER_MODEL = 'users.User'
 
 # Django Rest Framework settings
 
