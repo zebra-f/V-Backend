@@ -6,12 +6,12 @@ from django.conf import settings
 
 from uuid import uuid4
 
- 
+
 class UserManager(BaseUserManager):   
     def create_user(self, email, username, password=None, **kwargs):
         """
         Creates and saves a User with the given email and password.
-        **kwargs: fields inherited from Users's parent class PermissionsMixin.
+        **kwargs: other fields from User model including those inherited from Users's parent class PermissionsMixin.
         """
         if not email:
             raise ValueError('Users must have an email address')
@@ -33,7 +33,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, username, password=None, **kwargs):
         """
         Creates and saves a superuser with the given email and password.
-        **kwargs: fields inherited from Users's parent class PermissionsMixin.
+        **kwargs: f other fields from User model including those inherited from Users's parent class PermissionsMixin.
         """
         kwargs.setdefault('is_superuser', True)
         kwargs.setdefault('is_active', True)
@@ -60,11 +60,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), max_length=255, unique=True)
     
     username = models.CharField(_('username'), max_length=32, unique=True)
-    
-    created_at = models.DateField(_('created at'), default=timezone.now, editable=False)
-    updated_at = models.DateField(_('updated at'), default=timezone.now, editable=False)
-    last_login = models.DateField(_('last login'), null=True, editable=False)
-    last_logout = models.DateField(_('last logout'), null=True, editable=False)
+
+    created_at = models.DateField(_('created at'), default=timezone.now)
+    updated_at = models.DateField(_('updated at'), auto_now=True)
+    last_login = models.DateField(_('last login'), null=True)
+    last_logout = models.DateField(_('last logout'), null=True)
 
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
@@ -86,7 +86,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         "Is the user a member of staff?"
         # All admins are staff
         return self.is_admin
-        
+
 
 class UserPersonalProfile(models.Model):
     
