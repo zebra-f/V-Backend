@@ -33,7 +33,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, username, password=None, **kwargs):
         """
         Creates and saves a superuser with the given email and password.
-        **kwargs: f other fields from User model including those inherited from Users's parent class PermissionsMixin.
+        **kwargs: other fields from User model including those inherited from Users's parent class PermissionsMixin.
         """
         kwargs.setdefault('is_superuser', True)
         kwargs.setdefault('is_active', True)
@@ -95,3 +95,6 @@ class UserPersonalProfile(models.Model):
     # blank: validation related
     first_name = models.CharField(_('first name'), max_length=64, null=True, blank=True)
     last_name = models.CharField(_('last name'), max_length=64, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.email
