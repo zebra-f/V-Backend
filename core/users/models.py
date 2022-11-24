@@ -19,11 +19,14 @@ class UserManager(BaseUserManager):
         if not username:
             raise ValueError('Users must have an username')
 
+        if not password:
+            raise ValueError('Users must have a password')
+
         user = self.model(
             email=self.normalize_email(email),
             username=username,
             **kwargs
-        )
+        ) 
 
         # user.is_active = True
         user.set_password(password)
