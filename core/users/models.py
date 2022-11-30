@@ -65,7 +65,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), max_length=32, unique=True)
 
     created_at = models.DateField(_('created at'), default=timezone.now)
-    updated_at = models.DateField(_('updated at'), auto_now=True)
+    updated_at = models.DateField(_('updated at'), null=True)
     last_login = models.DateField(_('last login'), null=True)
     last_logout = models.DateField(_('last logout'), null=True)
 
@@ -86,7 +86,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_staff(self):
-        "Is the user a member of staff?"
         # All admins are staff
         return self.is_admin
 
@@ -98,6 +97,8 @@ class UserPersonalProfile(models.Model):
     # blank: validation related
     first_name = models.CharField(_('first name'), max_length=64, null=True, blank=True)
     last_name = models.CharField(_('last name'), max_length=64, null=True, blank=True)
+
+    updated_at = models.DateField(_('updated at'), auto_now=True)
 
     def __str__(self):
         return self.user.email

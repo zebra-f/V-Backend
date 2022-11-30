@@ -28,7 +28,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     # permission_classes = [IsAccountAdminOrReadOnly]
 
-    @action(methods=['post', 'get'], detail=True)
+    @action(methods=['post'], detail=True)
     def activate(self, request, pk=None):
         instance = self.get_object()
         instance.is_active = True
@@ -36,7 +36,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_200_OK)
 
-    @action(methods=['post', 'get'], detail=True)
+    @action(methods=['post'], detail=True)
     def deactivate(self, request, pk=None):
         if request.user.is_anonymous:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
