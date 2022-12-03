@@ -3,7 +3,6 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-
 from .serializers import UserSerializer
 from .models import User
 
@@ -23,7 +22,7 @@ from .models import User
 #         return Response(serializer.data)
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):  
     queryset = User.objects.all()
     serializer_class = UserSerializer
     # permission_classes = [IsAccountAdminOrReadOnly]
