@@ -2,9 +2,15 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.permissions import (
+    IsAdminUser, 
+    IsAuthenticated, 
+    AllowAny
+    )
 
 from .serializers import UserSerializer
 from .models import User
+from .permissions import UserIsAuthorized
 
 # class UserViewSet(viewsets.ViewSet):
 #     """
@@ -23,29 +29,32 @@ from .models import User
 
 
 class UserViewSet(viewsets.ModelViewSet):  
-    queryset = User.objects.all()
+    queryset = User.objects.all() 
     serializer_class = UserSerializer
-    # permission_classes = [IsAccountAdminOrReadOnly]
+    permission_classes = [IsAdminUser]
+    object_level_actions = [
+        'retrieve', 'update', 'partial_update', 'destroy', 'activate', 'deactivate'
+        ]
+
+    def get_permissions(self):
+        if self.action in ('list', 'create'):
+            self.permission_classes = [AllowAny]
+        if self.action in self.object_level_actions:
+            self.permission_classes = [UserIsAuthorized]
+        return super().get_permissions()
 
     @action(methods=['post'], detail=True)
     def activate(self, request, pk=None):
         instance = self.get_object()
         instance.is_active = True
         instance.save()
-
         return Response(status=status.HTTP_200_OK)
 
     @action(methods=['post'], detail=True)
     def deactivate(self, request, pk=None):
-        if request.user.is_anonymous:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
         instance = self.get_object()
-        if instance == request.user or request.user.is_admin:
-            instance.is_active = False
-            instance.save()
-            return Response(status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        instance.is_active = False
+        instance.save()
+        return Response(status=status.HTTP_200_OK)
 
 
