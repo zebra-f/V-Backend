@@ -59,6 +59,10 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    
+    class Meta:
+        ordering = ['-created_at']
+
     id = models.UUIDField(primary_key=True, default=uuid4)
     email = models.EmailField(_('email address'), max_length=255, unique=True)
     
