@@ -68,10 +68,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     username = models.CharField(_('username'), max_length=32, unique=True)
 
-    created_at = models.DateField(_('created at'), default=timezone.now)
-    updated_at = models.DateField(_('updated at'), null=True)
-    last_login = models.DateField(_('last login'), null=True)
-    last_logout = models.DateField(_('last logout'), null=True)
+    created_at = models.DateTimeField(_('created at'), default=timezone.now)
+    updated_at = models.DateTimeField(_('updated at'), null=True)
+    last_login = models.DateTimeField(_('last login'), null=True)
+    last_logout = models.DateTimeField(_('last logout'), null=True)
 
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)

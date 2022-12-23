@@ -133,7 +133,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Django settings
 
 AUTH_USER_MODEL = 'users.User'
+
+# email
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'backend@example.com'
+
+# PasswordResetTokenGenerator
+PASSWORD_RESET_TIMEOUT = 172800  # 2 days in seconds
+
 
 # Django Rest Framework settings
 
