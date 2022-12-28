@@ -69,7 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), max_length=32, unique=True)
 
     created_at = models.DateTimeField(_('created at'), default=timezone.now)
-    updated_at = models.DateTimeField(_('updated at'), null=True)
+    updated_at = models.DateTimeField(_('updated at'), auto_now=True)
     last_login = models.DateTimeField(_('last login'), null=True)
     last_logout = models.DateTimeField(_('last logout'), null=True)
 
@@ -102,7 +102,7 @@ class UserPersonalProfile(models.Model):
     first_name = models.CharField(_('first name'), max_length=64, null=True, blank=True)
     last_name = models.CharField(_('last name'), max_length=64, null=True, blank=True)
 
-    updated_at = models.DateField(_('updated at'), auto_now=True)
+    updated_at = models.DateTimeField(_('updated at'), auto_now=True)
 
     def __str__(self):
         return self.user.email
