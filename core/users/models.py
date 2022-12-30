@@ -96,7 +96,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class UserPersonalProfile(models.Model):
     
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='user_personal_profile', on_delete=models.CASCADE)
     
     # blank: validation related
     first_name = models.CharField(_('first name'), max_length=64, null=True, blank=True)

@@ -5,7 +5,7 @@ from core.users.models import User
 
 
 class UserTests(APITestCase):
-    
+
     def test_create_user(self):
         """
         Ensure we can create a new User.
