@@ -70,6 +70,7 @@ class UserSerializer(serializers.ModelSerializer, PasswordValidatorMixin, EmailM
         return instance
 
     def update(self, instance, validated_data):
+        """not in use, user can not update or partial_update User model"""
         instance.email = validated_data.get('email', instance.email)
         instance.username = validated_data.get('username', instance.username)
         if validated_data.get('password'):

@@ -2,18 +2,14 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import (
-    IsAdminUser,
-    AllowAny
-    )
+from rest_framework.permissions import IsAdminUser, AllowAny
 
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from django.shortcuts import get_object_or_404
-
 from .serializers import UserSerializer, UserPasswordResetSerializer
 from .models import User
-from .permissions import UserIsAuthorized
+from .permissions import UserIsAuthorized, ForbiddenAction
 from .utils.tokens import activate_user_token_generator, custom_password_reset_token_generator
 
 
@@ -23,17 +19,21 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser]
     object_level_actions = [
         'retrieve', 
-        'update', 
-        'partial_update', 
         'destroy', 
         'deactivate', 
         ]
+    forbidden_object_level_actions = [
+        'update', 
+        'partial_update', 
+    ]
 
     def get_permissions(self):
         if self.action in ('list', 'create', 'token_activate_user', 'token_password_reset', 'test'):
             self.permission_classes = [AllowAny]
         if self.action in self.object_level_actions:
             self.permission_classes = [UserIsAuthorized]
+        if self.action in self.forbidden_object_level_actions:
+            self.permission_classes = [ForbiddenAction]
         return super().get_permissions()
 
     def get_serializer(self, *args, **kwargs):
@@ -74,6 +74,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(methods=['post', 'patch'], detail=False)
     def token_password_reset(self, request):
+        # user requests a password reset
         if request.method == 'POST':
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -81,6 +82,7 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.send_reset_password_email(user)
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
+        # user submits a new password with the provided token
         if request.method == 'PATCH':
             user = self.check_token_get_user(request, custom_password_reset_token_generator)
             if user:

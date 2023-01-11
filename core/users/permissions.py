@@ -10,3 +10,12 @@ class UserIsAuthorized(BasePermission):
         if request.user.is_anonymous:
             return False
         return obj.is_staff or request.user == obj
+
+
+class ForbiddenAction(BasePermission):
+
+    def has_permission(self, request, view):
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        return False
